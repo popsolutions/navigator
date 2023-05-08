@@ -1,0 +1,12 @@
+{
+  "bot_number": "59892273089",
+  "blackList": [],
+  "searchCi": {
+    "token": "key for searching CI",
+    "blackList": [],
+    "groupBlackList": []
+  },
+  "quesoBlacklist": [],
+  "adminId": [],
+  "adminToken": "admin token",
+}
