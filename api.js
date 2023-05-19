@@ -10,9 +10,33 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 const apiPort = process.env.API_PORT;
 
-function updateConfig() {
-    fs.writeFileSync("config.json", JSON.stringify(bot.config, null, 2));
+async function updateConfig() {
+    try {
+        fs.writeFileSync("config.json", JSON.stringify(bot.config, null, 2));
+    } catch (e) {
+        console.error('Error while updating config:', e);
+    }
 }
+
+app.post("/blacklist/add", checkAdmin, async (req, res) => {
+    try {
+        await bot.addGroupBlackList(req.body.id);
+        await updateConfig();
+        res.sendStatus(200);
+    } catch (e) {
+        res.status(400).send(e);
+    }
+});
+
+app.post("/blacklist/remove", checkAdmin, async (req, res) => {
+    try {
+        await bot.removeGroupBlackList(req.body.id);
+        await updateConfig();
+        res.sendStatus(200);
+    } catch (e) {
+        res.status(400).send(e);
+    }
+});
 
 function checkAdmin(req, res, next) {
     const token = req.body.token;
