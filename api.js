@@ -10,32 +10,36 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 const apiPort = process.env.API_PORT || 3000;
 
-async function updateConfig() {
-    try {
-        fs.writeFileSync("config.json", JSON.stringify(bot.config, null, 2));
-    } catch (e) {
-        console.error('Error while updating config:', e);
+function updateConfig() {
+    fs.writeFileSync("config.json", JSON.stringify(bot.config, null, 2));
+}
+
+function checkAdmin(req, res, next) {
+    const token = req.body.token;
+    const adminToken = bot.config.adminToken;
+
+    if (adminToken === token) {
+        next(); // pass the request to the next middleware
+    } else {
+        res.status(403).send("Error: Access denied"); // send a 403 Forbidden error response
     }
 }
 
-app.post("/blacklist/add", checkAdmin, async (req, res) => {
+app.post("/blacklist/add", checkAdmin, (req, res) => {
     try {
-        await bot.addGroupBlackList(req.body.id);
-        await updateConfig();
+        bot.addGroupBlackList(req.body.id);
+        updateConfig();
         res.sendStatus(200);
     } catch (e) {
         res.status(400).send(e);
     }
+
 });
 
-app.post("/blacklist/remove", checkAdmin, async (req, res) => {
-    try {
-        await bot.removeGroupBlackList(req.body.id);
-        await updateConfig();
-        res.sendStatus(200);
-    } catch (e) {
-        res.status(400).send(e);
-    }
+app.post("/blacklist/remove", checkAdmin, (req, res) => {
+    bot.removeGroupBlackList(req.body.id);
+    updateConfig();
+    res.sendStatus(200);
 });
 
 app.listen(apiPort, () => {
