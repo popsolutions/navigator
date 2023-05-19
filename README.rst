@@ -4,6 +4,9 @@ Navigator Whatsapp BOT
 GPT3.5 Assisted Whatsapp BOT
 ============================
 
+Original Author: [Agustín Cespedes](https://github.com/Caceager)
+Contributor: Navigator
+
 This is a virtual assistant powered by GPT3.5 that operates through Whatsapp. Below you will find information on how to setup and run this BOT.
 
 Prerequisites
